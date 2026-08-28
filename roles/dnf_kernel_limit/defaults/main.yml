@@ -1,0 +1,7 @@
+---
+# Number of installed versions to keep for "installonly" packages (kernel,
+# kernel-core, kernel-modules, etc. -- see installonlypkgs in dnf.conf).
+# dnf/yum enforce a hard minimum of 2. With this set to 2, installing a new
+# kernel automatically removes the oldest one once 3 are present, leaving
+# the current + 1 previous kernel installed.
+kernel_installonly_limit: 2

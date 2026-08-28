@@ -1,0 +1,34 @@
+---
+- name: Ensure yum-utils is installed (provides needs-restarting)
+  ansible.builtin.yum:
+    name: yum-utils
+    state: present
+
+- name: Update all packages to the latest version
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+    update_cache: true
+  register: system_update_result
+
+- name: Check whether a reboot is required
+  ansible.builtin.command: needs-restarting -r
+  register: system_update_needs_restarting
+  changed_when: false
+  failed_when: system_update_needs_restarting.rc not in [0, 1]
+
+- name: Report update / reboot status
+  ansible.builtin.debug:
+    msg: >-
+      Packages changed: {{ system_update_result.changed }}.
+      {{ 'A reboot is required to apply all updates.'
+         if system_update_needs_restarting.rc == 1
+         else 'No reboot required.' }}
+
+- name: Reboot the host to apply updates
+  ansible.builtin.reboot:
+    reboot_timeout: 600
+    msg: "Rebooting to apply system updates (automated by Ansible)"
+  when:
+    - system_update_needs_restarting.rc == 1
+    - system_update_auto_reboot | bool

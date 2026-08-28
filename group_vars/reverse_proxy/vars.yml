@@ -1,0 +1,6 @@
+---
+# Connection details for the real host, sourced from vault.yml (encrypted)
+# in this same directory so nothing sensitive is stored in plaintext.
+ansible_host: "{{ vault_reverse_proxy_ansible_host }}"
+ansible_user: "{{ vault_reverse_proxy_ansible_user }}"
+ansible_ssh_private_key_file: "{{ vault_reverse_proxy_ssh_key }}"

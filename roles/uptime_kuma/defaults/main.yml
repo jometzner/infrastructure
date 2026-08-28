@@ -1,0 +1,18 @@
+---
+# The user everything runs under. Reuses proxy_user (created by base_user)
+# by default so it doesn't need to be defined twice.
+uptime_kuma_user: "{{ proxy_user.name }}"
+
+uptime_kuma_repo: https://github.com/louislam/uptime-kuma.git
+uptime_kuma_version: 2.5.0
+uptime_kuma_dest: "/home/{{ uptime_kuma_user }}/uptime-kuma"
+uptime_kuma_pm2_app_name: uptime-kuma
+
+# npm's default global install location needs root. Instead we point npm's
+# global prefix at a directory the deploy user owns, so `npm install -g`
+# and `pm2` work without ever needing sudo.
+uptime_kuma_npm_global_dir: "/home/{{ uptime_kuma_user }}/.npm-global"
+
+uptime_kuma_env:
+  HOME: "/home/{{ uptime_kuma_user }}"
+  PATH: "{{ uptime_kuma_npm_global_dir }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

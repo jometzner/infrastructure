@@ -1,0 +1,50 @@
+---
+- name: Install NGINX
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Deploy reverse proxy site configs
+  ansible.builtin.template:
+    src: reverse_proxy.conf.j2
+    dest: "/etc/nginx/conf.d/{{ item.domain }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ nginx_sites }}"
+  loop_control:
+    label: "{{ item.domain }}"
+  notify: Reload NGINX
+
+- name: Allow NGINX to make outbound proxy connections (SELinux)
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+  when: ansible_facts.selinux.status is defined and ansible_facts.selinux.status == "enabled"
+
+- name: Gather service facts to detect firewalld
+  ansible.builtin.service_facts:
+
+# Only touch firewalld if it's actually the active firewall on this host.
+# Some cloud images (e.g. IONOS) ship firewalld installed-but-inactive and
+# rely on provider-level security groups instead, so we don't force it on.
+- name: Allow HTTP/HTTPS through firewalld
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - http
+    - https
+  when: >-
+    'firewalld.service' in ansible_facts.services and
+    ansible_facts.services['firewalld.service'].state == 'running'
+
+- name: Ensure NGINX is enabled and running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true

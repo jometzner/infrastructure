@@ -1,0 +1,14 @@
+---
+- name: Apply yum package updates
+  hosts: reverse_proxy
+  become: true
+
+  vars:
+    # Set to true (here, with -e, or in group_vars) to let this playbook
+    # automatically reboot the host when an update requires it (e.g. a new
+    # kernel). Left off by default so patching a live reverse proxy never
+    # causes an unplanned outage without an explicit opt-in.
+    system_update_auto_reboot: false
+
+  roles:
+    - system_update

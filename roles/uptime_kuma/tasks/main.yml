@@ -1,0 +1,114 @@
+---
+- name: Install Node.js (includes npm) and git
+  ansible.builtin.yum:
+    name:
+      - nodejs
+      - git
+    state: present
+    update_cache: true
+
+- name: Configure a user-writable npm global install prefix
+  ansible.builtin.copy:
+    dest: "/home/{{ uptime_kuma_user }}/.npmrc"
+    content: "prefix={{ uptime_kuma_npm_global_dir }}\n"
+    owner: "{{ uptime_kuma_user }}"
+    group: "{{ uptime_kuma_user }}"
+    mode: "0644"
+
+- name: Add npm global bin dir to PATH for {{ uptime_kuma_user }}
+  ansible.builtin.lineinfile:
+    path: "/home/{{ uptime_kuma_user }}/.bashrc"
+    line: 'export PATH="{{ uptime_kuma_npm_global_dir }}/bin:$PATH"'
+    create: true
+    owner: "{{ uptime_kuma_user }}"
+    group: "{{ uptime_kuma_user }}"
+    mode: "0644"
+
+- name: Clone Uptime Kuma repository
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.git:
+    repo: "{{ uptime_kuma_repo }}"
+    dest: "{{ uptime_kuma_dest }}"
+    version: "{{ uptime_kuma_version }}"
+  environment: "{{ uptime_kuma_env }}"
+
+# `npm run setup` installs server + webapp dependencies and builds the
+# frontend into dist/. Used as a marker so this doesn't rerun every time.
+- name: Run Uptime Kuma setup (npm run setup)
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: npm run setup
+  args:
+    chdir: "{{ uptime_kuma_dest }}"
+    creates: "{{ uptime_kuma_dest }}/dist/index.html"
+  environment: "{{ uptime_kuma_env }}"
+
+- name: Install PM2 globally
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.npm:
+    name: pm2
+    global: true
+  environment: "{{ uptime_kuma_env }}"
+
+# PM2's first invocation for a user spawns its daemon and prints banner
+# lines to stdout before any command output, which would otherwise corrupt
+# JSON parsing below. Warm it up here so `pm2 jlist` output is clean JSON.
+- name: Ensure the PM2 daemon is running
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: pm2 ping
+  changed_when: false
+  environment: "{{ uptime_kuma_env }}"
+
+- name: Get current PM2-managed process/module list
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: pm2 jlist
+  register: uptime_kuma_pm2_state
+  changed_when: false
+  environment: "{{ uptime_kuma_env }}"
+
+- name: Parse PM2 process/module names
+  ansible.builtin.set_fact:
+    uptime_kuma_pm2_processes: "{{ uptime_kuma_pm2_state.stdout | from_json | map(attribute='name') | list }}"
+
+- name: Install pm2-logrotate module
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: pm2 install pm2-logrotate
+  when: "'pm2-logrotate' not in uptime_kuma_pm2_processes"
+  environment: "{{ uptime_kuma_env }}"
+
+- name: Start Uptime Kuma under PM2
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: "pm2 start server/server.js --name {{ uptime_kuma_pm2_app_name }}"
+  args:
+    chdir: "{{ uptime_kuma_dest }}"
+  when: "uptime_kuma_pm2_app_name not in uptime_kuma_pm2_processes"
+  environment: "{{ uptime_kuma_env }}"
+
+- name: Check if PM2 systemd startup service already exists
+  ansible.builtin.stat:
+    path: "/etc/systemd/system/pm2-{{ uptime_kuma_user }}.service"
+  register: uptime_kuma_pm2_service
+
+# `pm2 startup`'s own suggested command only adds /usr/bin to PATH, which
+# wouldn't find pm2 in our custom npm prefix, so this calls the binary
+# directly instead of relying on the generated command. Must run as root
+# (unlike everything else in this role) since it writes a systemd unit.
+- name: Generate and install the PM2 startup systemd service
+  ansible.builtin.command: >-
+    env PATH={{ uptime_kuma_npm_global_dir }}/bin:/usr/bin
+    {{ uptime_kuma_npm_global_dir }}/bin/pm2 startup systemd
+    -u {{ uptime_kuma_user }} --hp /home/{{ uptime_kuma_user }}
+  when: not uptime_kuma_pm2_service.stat.exists
+
+- name: Ensure the PM2 startup service is enabled
+  ansible.builtin.systemd:
+    name: "pm2-{{ uptime_kuma_user }}"
+    enabled: true
+    daemon_reload: true
+
+# Persists the current process/module list to ~/.pm2/dump.pm2, which is what
+# `pm2 resurrect` (run by the systemd service above) restores on boot.
+- name: Save PM2 process list so it survives a reboot
+  become_user: "{{ uptime_kuma_user }}"
+  ansible.builtin.command: pm2 save
+  changed_when: false
+  environment: "{{ uptime_kuma_env }}"

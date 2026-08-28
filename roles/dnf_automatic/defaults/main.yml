@@ -1,0 +1,7 @@
+---
+# Whether dnf-automatic should actually install updates (true) or only
+# download/check for them (false).
+dnf_automatic_apply_updates: true
+
+# 'default' installs all available updates, 'security' only security updates.
+dnf_automatic_upgrade_type: default

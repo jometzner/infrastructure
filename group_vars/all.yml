@@ -1,0 +1,32 @@
+---
+# --- Local user (UID 1000) -------------------------------------------------
+proxy_user:
+  name: deploy
+  uid: 1000
+  group: deploy
+  shell: /bin/bash
+
+# --- Extra software installed via pip3 -------------------------------------
+pip_packages:
+  - keepercommander
+  - certifi
+
+# --- NGINX reverse proxy domains -------------------------------------------
+# Add/remove entries as needed. Each one becomes its own server block.
+# Domain names themselves are vaulted (see group_vars/reverse_proxy/vault.yml)
+# since this project isn't published yet.
+nginx_sites:
+  - domain: "{{ vault_domain_uptime }}"
+    backend: http://127.0.0.1:3001
+    ssl_certificate: /etc/nginx/ssl/fullchain.pem
+    ssl_certificate_key: /etc/nginx/ssl/privkey.pem
+  - domain: "{{ vault_domain_immich }}"
+    backend: http://198.18.7.1:2283
+    ssl_certificate: /etc/nginx/ssl/fullchain.pem
+    ssl_certificate_key: /etc/nginx/ssl/privkey.pem
+    client_max_body_size: 10m
+  - domain: "{{ vault_domain_paperless }}"
+    backend: http://198.18.7.1:8000
+    ssl_certificate: /etc/nginx/ssl/fullchain.pem
+    ssl_certificate_key: /etc/nginx/ssl/privkey.pem
+    client_max_body_size: 100m

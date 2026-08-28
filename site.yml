@@ -1,0 +1,12 @@
+---
+- name: Provision reverse proxy VM
+  hosts: reverse_proxy
+  become: true
+
+  roles:
+    - base_user
+    - pip_packages
+    - uptime_kuma
+    - nginx_proxy
+    - dnf_automatic
+    - dnf_kernel_limit

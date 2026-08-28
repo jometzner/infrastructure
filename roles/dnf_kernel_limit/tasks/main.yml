@@ -1,0 +1,10 @@
+---
+# /etc/yum.conf is just a symlink to this file on CentOS/RHEL, so this
+# covers both `yum` and `dnf` invocations.
+- name: Limit the number of installed kernel package versions to keep
+  ansible.builtin.ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: installonly_limit
+    value: "{{ kernel_installonly_limit }}"
+    backup: true

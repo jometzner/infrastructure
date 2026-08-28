@@ -1,0 +1,13 @@
+# Ansible Vault
+.vault_pass.txt
+*.vault_pass*
+
+# Ansible runtime artifacts
+*.retry
+.ansible/
+
+# Entire CLI (checkpoint/session tool) local state -- must never be committed
+.entire/
+
+# OS / editor cruft
+.DS_Store

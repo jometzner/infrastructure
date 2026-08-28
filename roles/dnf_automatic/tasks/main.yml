@@ -1,0 +1,26 @@
+---
+- name: Install dnf-automatic
+  ansible.builtin.yum:
+    name: dnf-automatic
+    state: present
+
+- name: Configure dnf-automatic to apply updates automatically
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: '^\s*apply_updates\s*='
+    line: "apply_updates = {{ dnf_automatic_apply_updates | ternary('yes', 'no') }}"
+    backup: true
+
+- name: Configure dnf-automatic upgrade type
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: '^\s*upgrade_type\s*='
+    line: "upgrade_type = {{ dnf_automatic_upgrade_type }}"
+    backup: true
+
+- name: Ensure dnf-automatic runs daily via its systemd timer
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
+    state: started
+    enabled: true
+    daemon_reload: true

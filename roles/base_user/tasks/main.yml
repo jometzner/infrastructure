@@ -1,0 +1,15 @@
+---
+- name: Create group for proxy user
+  ansible.builtin.group:
+    name: "{{ proxy_user.group }}"
+    gid: "{{ proxy_user.uid }}"
+    state: present
+
+- name: Create local user with UID 1000
+  ansible.builtin.user:
+    name: "{{ proxy_user.name }}"
+    uid: "{{ proxy_user.uid }}"
+    group: "{{ proxy_user.group }}"
+    shell: "{{ proxy_user.shell }}"
+    create_home: true
+    state: present

@@ -1,0 +1,14 @@
+---
+- name: Ensure python3-pip and python3-packaging are installed
+  ansible.builtin.yum:
+    name:
+      - python3-pip
+      - python3-packaging  # required by ansible.builtin.pip for version comparisons
+    state: present
+    update_cache: true
+
+- name: Install additional Python packages via pip3
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    executable: pip3
+    state: present
