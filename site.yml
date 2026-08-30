@@ -8,5 +8,6 @@
     - pip_packages
     - uptime_kuma
     - nginx_proxy
+    - zram
     - dnf_automatic
     - dnf_kernel_limit

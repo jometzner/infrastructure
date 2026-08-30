@@ -1,0 +1,11 @@
+---
+- name: Install zram generator defaults
+  ansible.builtin.yum:
+    name: zram-generator-defaults
+    state: present
+
+- name: Ensure zram0 swap setup service is active
+  ansible.builtin.systemd:
+    name: systemd-zram-setup@zram0.service
+    state: started
+    daemon_reload: true

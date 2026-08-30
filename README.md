@@ -8,6 +8,7 @@ Simple Ansible playbook that provisions a reverse proxy VM:
 4. Installs and configures `dnf-automatic` for daily unattended updates
 5. Installs and runs Uptime Kuma under PM2 (with boot persistence)
 6. Limits how many old kernel versions are kept installed
+7. Enables compressed zram swap on `/dev/zram0`
 
 Target OS: **CentOS Stream 10** (uses the `yum`/`dnf` package manager, SELinux,
 and `firewalld` — all handled below).
@@ -31,6 +32,7 @@ Ansible/
     ├── pip_packages/           # installs pip3 + extra packages
     ├── uptime_kuma/            # installs + runs Uptime Kuma under PM2
     ├── nginx_proxy/            # installs NGINX + per-domain reverse proxy configs
+    ├── zram/                   # enables zram-backed swap on /dev/zram0
     ├── system_update/          # applies yum package updates, optional reboot
     ├── dnf_automatic/          # installs + configures daily unattended updates
     └── dnf_kernel_limit/       # limits how many old kernels are kept installed
