@@ -1,0 +1,1 @@
+I would like to activate /dev/zram0 on my reverse_proxy_vm. That should be done via systemd "systemd-zram-setup@zram0.service" can you verify and make the change to my Ansible code? On the system itself I already played around and made the change. Now, I want to persist this in Ansible code.

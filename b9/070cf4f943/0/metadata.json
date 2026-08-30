@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "b9070cf4f943",
+  "session_id": "c2339b66-3434-4102-a702-a9081fe692d7",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-30T11:29:27.816001Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "README.md",
+    "roles/zram/tasks/main.yml",
+    "site.yml"
+  ],
+  "agent": "Copilot CLI",
+  "model": "gpt-5.6-terra",
+  "turn_id": "184d8316c67c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 210741,
+    "cache_creation_tokens": 28411,
+    "cache_read_tokens": 163529,
+    "output_tokens": 4402,
+    "api_call_count": 12
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-30T11:29:27.800891Z",
+    "agent_lines": 14,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 14,
+    "total_lines_changed": 14,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 61,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61
+      }
+    }
+  ]
+}
