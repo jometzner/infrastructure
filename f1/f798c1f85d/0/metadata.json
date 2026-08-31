@@ -1,0 +1,106 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "f1f798c1f85d",
+  "session_id": "dc8cdb3a-8be1-4255-9195-7c3696fd242a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T21:04:15.40427Z",
+  "branch": "main",
+  "checkpoints_count": 7,
+  "save_step_count": 5,
+  "files_touched": [
+    "README.md",
+    "group_vars/reverse_proxy/vars.yml",
+    "group_vars/reverse_proxy/vault.yml",
+    "roles/wireguard/defaults/main.yml",
+    "roles/wireguard/handlers/main.yml",
+    "roles/wireguard/tasks/main.yml",
+    "roles/wireguard/templates/wg0.conf.j2",
+    "site.yml"
+  ],
+  "agent": "Copilot CLI",
+  "model": "gpt-5.6-terra",
+  "turn_id": "6a61b9bef193",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 701740,
+    "cache_creation_tokens": 64553,
+    "cache_read_tokens": 605367,
+    "output_tokens": 10025,
+    "api_call_count": 33
+  },
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-31T21:04:15.380448Z",
+    "agent_lines": 79,
+    "agent_removed": 0,
+    "human_added": 9,
+    "human_modified": 26,
+    "human_removed": 0,
+    "total_committed": 114,
+    "total_lines_changed": 114,
+    "agent_percentage": 69.2982456140351,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 61,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 61,
+      "user_lines_removed": 0,
+      "agent_lines_added": 111,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 10643,
+      "user_lines_removed": 25,
+      "agent_lines_added": 111,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61,
+        "Ansible Reverse Proxy VM Setup.md": 10548,
+        "group_vars/reverse_proxy/vault.yml": 34
+      },
+      "user_removed_per_file": {
+        "group_vars/reverse_proxy/vault.yml": 19,
+        "roles/wireguard/tasks/main.yml": 6
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 10609,
+      "user_lines_removed": 0,
+      "agent_lines_added": 139,
+      "agent_lines_removed": 19,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61,
+        "Ansible Reverse Proxy VM Setup.md": 10548
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 10609,
+      "user_lines_removed": 0,
+      "agent_lines_added": 139,
+      "agent_lines_removed": 19,
+      "user_added_per_file": {
+        ".github/hooks/entire.json": 61,
+        "Ansible Reverse Proxy VM Setup.md": 10548
+      }
+    }
+  ]
+}

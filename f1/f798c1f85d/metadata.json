@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "f1f798c1f85d",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 7,
+  "files_touched": [
+    "README.md",
+    "group_vars/reverse_proxy/vars.yml",
+    "group_vars/reverse_proxy/vault.yml",
+    "roles/wireguard/defaults/main.yml",
+    "roles/wireguard/handlers/main.yml",
+    "roles/wireguard/tasks/main.yml",
+    "roles/wireguard/templates/wg0.conf.j2",
+    "site.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f1/f798c1f85d/0/metadata.json",
+      "transcript": "/f1/f798c1f85d/0/full.jsonl",
+      "compact_transcript": "/f1/f798c1f85d/0/transcript.jsonl",
+      "content_hash": "/f1/f798c1f85d/0/content_hash.txt",
+      "prompt": "/f1/f798c1f85d/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 701740,
+    "cache_creation_tokens": 64553,
+    "cache_read_tokens": 605367,
+    "output_tokens": 10025,
+    "api_call_count": 33
+  }
+}

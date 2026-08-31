@@ -1,0 +1,25 @@
+Can you check if htop is getting installed as part of any role?
+
+---
+
+What about wireguard? Is this setup via Ansible?
+
+---
+
+Can you please add a role to enable "systemctl enable --now wg-quick@wg" and place a valid wireguard configuration under "/etc/wireguard/wg0.conf" as jinja template? I'll provide the details later
+
+---
+
+The installation of the wireguard-tools package can be removed. The VM will have it on cloud-init.
+
+---
+
+Can you perform a syntaxt check once more? I made the changes to my vault
+
+---
+
+Fine. Now please execute and test for idempotency on the reverse_proxy_vm
+
+---
+
+Thank you for mentioning and identifying my original wish to test with "wireguard_enabled". Please do it again this time with the value "true"
