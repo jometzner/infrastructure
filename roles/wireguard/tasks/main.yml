@@ -1,0 +1,46 @@
+---
+- name: Configure WireGuard
+  when: wireguard_enabled | bool
+  block:
+    - name: Validate WireGuard configuration variables
+      ansible.builtin.assert:
+        that:
+          - wireguard_address | length > 0
+          - wireguard_private_key | length > 0
+          - wireguard_peers is sequence
+          - wireguard_peers is not string
+          - wireguard_peers | map(attribute='public_key') | list | length == wireguard_peers | length
+          - wireguard_peers | map(attribute='allowed_ips') | list | length == wireguard_peers | length
+        fail_msg: >-
+          Add the WireGuard connection values to the vault before enabling
+          WireGuard.
+      no_log: true
+
+    - name: Create WireGuard configuration directory
+      ansible.builtin.file:
+        path: /etc/wireguard
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+
+    - name: Deploy WireGuard configuration
+      ansible.builtin.template:
+        src: wg0.conf.j2
+        dest: "/etc/wireguard/{{ wireguard_interface }}.conf"
+        owner: root
+        group: root
+        mode: "0600"
+      no_log: true
+      notify: Restart WireGuard
+
+    - name: Validate WireGuard configuration
+      ansible.builtin.command: "wg-quick strip {{ wireguard_interface }}"
+      changed_when: false
+      no_log: true
+
+    - name: Enable and start WireGuard interface
+      ansible.builtin.systemd:
+        name: "wg-quick@{{ wireguard_interface }}"
+        state: started
+        enabled: true

@@ -1,0 +1,7 @@
+---
+# Enable after adding the vault_wireguard_* values described in the README.
+wireguard_enabled: true
+wireguard_interface: wg0
+wireguard_listen_port: null
+wireguard_dns: []
+wireguard_mtu: null

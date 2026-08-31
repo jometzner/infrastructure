@@ -33,6 +33,7 @@ Ansible/
     ├── uptime_kuma/            # installs + runs Uptime Kuma under PM2
     ├── nginx_proxy/            # installs NGINX + per-domain reverse proxy configs
     ├── zram/                   # enables zram-backed swap on /dev/zram0
+    ├── wireguard/              # configures and starts an optional WireGuard tunnel
     ├── system_update/          # applies yum package updates, optional reboot
     ├── dnf_automatic/          # installs + configures daily unattended updates
     └── dnf_kernel_limit/       # limits how many old kernels are kept installed
@@ -52,6 +53,16 @@ Edit these:
     `http://127.0.0.1:8001` for an app running locally on the VM, or
     `http://10.0.0.5:80` for an app on another host); domain names
     themselves come from the vault file above.
+  - WireGuard is disabled by default. Once its vault values are present, set
+    `wireguard_enabled: true`. Add these values to
+    `group_vars/reverse_proxy/vault.yml`:
+    `vault_wireguard_address`, `vault_wireguard_private_key`, and
+    `vault_wireguard_peers`. Each peer requires `public_key` and
+    `allowed_ips`; `preshared_key`, `endpoint`, and
+    `persistent_keepalive` are optional. Optional interface values are
+    `vault_wireguard_listen_port`, `vault_wireguard_dns`, and
+    `vault_wireguard_mtu`. The role renders `/etc/wireguard/wg0.conf` and
+    enables `wg-quick@wg0`.
 
 `inventory/hosts.ini` itself only needs a generic alias and shouldn't
 normally need editing.

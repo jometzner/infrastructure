@@ -4,3 +4,11 @@
 ansible_host: "{{ vault_reverse_proxy_ansible_host }}"
 ansible_user: "{{ vault_reverse_proxy_ansible_user }}"
 ansible_ssh_private_key_file: "{{ vault_reverse_proxy_ssh_key }}"
+
+# WireGuard configuration values are defined in vault.yml.
+wireguard_address: "{{ vault_wireguard_address }}"
+wireguard_private_key: "{{ vault_wireguard_private_key }}"
+wireguard_peers: "{{ vault_wireguard_peers }}"
+wireguard_listen_port: "{{ vault_wireguard_listen_port | default(none) }}"
+wireguard_dns: "{{ vault_wireguard_dns | default([]) }}"
+wireguard_mtu: "{{ vault_wireguard_mtu | default(none) }}"
