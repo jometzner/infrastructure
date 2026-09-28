@@ -12,3 +12,4 @@
     - wireguard
     - dnf_automatic
     - dnf_kernel_limit
+    - fail2ban

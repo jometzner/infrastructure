@@ -9,6 +9,7 @@ Simple Ansible playbook that provisions a reverse proxy VM:
 5. Installs and runs Uptime Kuma under PM2 (with boot persistence)
 6. Limits how many old kernel versions are kept installed
 7. Enables compressed zram swap on `/dev/zram0`
+8. Configures fail2ban with a local jail override using systemd journal input
 
 Target OS: **CentOS Stream 10** (uses the `yum`/`dnf` package manager, SELinux,
 and `firewalld` — all handled below).
@@ -36,7 +37,8 @@ Ansible/
     ├── wireguard/              # configures and starts an optional WireGuard tunnel
     ├── system_update/          # applies yum package updates, optional reboot
     ├── dnf_automatic/          # installs + configures daily unattended updates
-    └── dnf_kernel_limit/       # limits how many old kernels are kept installed
+    ├── dnf_kernel_limit/       # limits how many old kernels are kept installed
+    └── fail2ban/               # deploys local fail2ban jail override + service
 ```
 
 ## Before you run it
