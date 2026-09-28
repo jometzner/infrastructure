@@ -1,0 +1,15 @@
+---
+- name: Deploy fail2ban local jail override
+  ansible.builtin.template:
+    src: 99-jail-local.conf.j2
+    dest: /etc/fail2ban/jail.d/99-jail-local.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart fail2ban
+
+- name: Ensure fail2ban is enabled and running
+  ansible.builtin.systemd:
+    name: fail2ban
+    state: started
+    enabled: true
